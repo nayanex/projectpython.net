@@ -90,4 +90,65 @@ while current != None:
 
 Objective: write a method that implements an algorithm on a simple linked list.
 
-Write a method find of the Node class that is passed a data item as parameter, and returns a reference to the first node in the linked list containing that item, or `None’ if the item is not found. (Use a loop to search for the item.)
+Write a method `find` of the `Node` class that is passed a data item as parameter, and returns a reference to the first node in the linked list containing that item, or `None` if the item is not found. (Use a loop to search for the item.)
+
+```python
+class Node:
+    def __init__(self, data):
+        self.data = data  # instance variable to store the data
+        self.next = None  # instance variable with address of next node
+
+    # Write your find method here:
+    def my_find(self, data):
+        current = self
+        while data != current.data:
+            current = current.next
+        return current if current else None
+
+    def find(self, data):
+        current = self
+        while(current != None):
+            if current.data == data:
+                return current
+            current = current.next
+        return None
+
+# The head is the first node in a linked list.
+head = Node("Maine")
+another_node = Node("Idaho")
+head.next = another_node
+a_third_node = Node("Utah")
+another_node.next = a_third_node
+
+print("Found:  " + str(head.find("Utah").data))
+```
+
+## Exercise: recursive find
+
+Objective: write a method that implements a recursive algorithm on a simple linked list.
+
+Write a method `find` of the `Node` class that is passed a data item as parameter, and returns a reference to the first node in the linked list containing that item, or `None’ if the item is not found. This time, write the method to search for the item recursively. Specifically, one of the following three things is true: we have found the item in the current node, we are at the end of the list, or the node is in the linked list starting at the next item. Your solution should not use any for-loops or while-loops.
+
+```python
+class Node:
+    def __init__(self, data):
+        self.data = data  # instance variable to store the data
+        self.next = None  # instance variable with address of next node
+
+    #  Write your find method here:
+    def find(self, data):
+        if data == self.data:
+            return self
+        if self.next == None:
+            return None
+        return self.next.find(data)
+
+# The head is the first node in a linked list.
+head = Node("Maine")
+another_node = Node("Idaho")
+head.next = another_node
+a_third_node = Node("Utah")
+another_node.next = a_third_node
+
+print("Found:  " + str(head.find("Utah").data))
+```
