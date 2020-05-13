@@ -279,3 +279,156 @@ class Sentinel_DLL:
         s += "]"
         return s
 ```
+
+## Creating an empty list: `__init__`
+
+A `Sentinel_DLL` object has just one instance variable: `sentinel`. This instance variable is a reference to a `Node` object. I defined the `Node` class in the sentinel_DLL.py file, rather than defining it in its own file, because it’s meant only to be part of a circular, doubly linked list with a sentinel.
+
+In order for the list to be circular, both the `next` and `prev`` instance variables of the sentinel node must contain the address of the sentinel itself. Here’s what an empty list looks like:
+
+![alt text](https://www.cs.dartmouth.edu/~scot/cs10/lectures/6/empty-DLL.gif)
+
+It can at first be intimidating to see a line with as many dot operators in it as
+
+`self.sentinel.next = self.sentinel`
+
+Just work left to right for each variable. `self` is the address of a `sentinel_DLL` object. `self.sentinel` is the value of the `sentinel` instance variable in the `sentinel_DLL` object. We know that this value contains the address of some `Node` object. So `self.sentinel.next` is the `next` instance variable of the sentinel node in the `sentinel_DLL` object. That’s what we’re assigning to. The value we’re assigning is `self.sentinel`, the address of the sentinel node.
+
+## Finding the first node
+
+The `first_node` method just returns a reference to the first node in the list, or `None` if the list contains just the sentinel. The first node is always the one after the sentinel. If the node just after the sentinel is the sentinel itself, then the list contains just the sentinel, and the method returns `None`. Otherwise, the method returns a reference to the first node.
+
+## Inserting a new node into a list
+
+To insert a new node into the list, we need to know which node we’re inserting it after. The parameter `x` is a reference to that node. The parameter `data` gives the data that we’re inserting.
+
+First, the method creates a new `Node` object, referenced by `y`, to hold the data that we want to add to the list. Now we need to “splice” the new node into the list, just as you can splice a new section into a piece of rope or magnetic tape. In order to splice in the new node, we need to do a few things:
+
+1. Make the links in the new node refer to the previous and next nodes in the list.
+2. Make the `next` link from the node that will precede the new node refer to the new node.
+3. Make the `prev` link from the node that will follow the new node refer to the new node.
+
+We have to be a little careful about the order in which we do these operations. Let’s name the nodes for convenience. We already have `x` referencing the node that the new node, referenced by `y`, goes after. Let `z` reference the next node after `x` before we insert `y`, so that `y` is supposed to go between `x` and `z`. If we clobber the value of the next instance variable of `x` too soon, we won’t have a way to get the address of `z`, which we will need.
+
+It’s good to be comfortable with the dot notation used so heavily in the code, but it may help you to draw a picture. Here’s the same method as above, but with a temporary variable introduced for `z`:
+
+```python
+ # Insert a new node with data after node x.
+def insert_after(self, x, data):
+    y = Node(data)   # make a new Node object.
+    z = x.next       # y goes between x and z
+
+    # Fix up the links in the new node.
+    y.prev = x
+    y.next = z
+
+    # The new node follows x.
+    x.next = y
+
+    # And it's the previous node of z.
+    z.prev = y
+```
+
+## Iterating over a list
+
+The `__str__` method shows an example of how to iterate over a list. The first node in the list is the node after the sentinel. We loop over nodes, letting `x` reference each node in the list, until returning to the sentinel again (recall that the list is circular). To get to the next node in the list, we use the line `x = x.next`.
+
+One other interesting thing about the `__str__` method is that I wrote it to produce the same string as you’d see if the linked list were a regular Python list. When Python prints a list, it puts single quotes around all strings in the list. So I have a check to see whether `x.data` is a string, and if it is, I add in the single quotes. I use the built-in Python function `type`, which returns the type of its argument. (You can play with this function in the Python interpreter, IDLE.)
+
+## Deleting from a list
+
+The `delete` method takes a node `x` and deletes it from the list. It’s deceptively simple in how it splices the node out, by just making its next and previous nodes reference each other. Just we did for insertion, let’s rewrite the `delete` method, but with `y` referencing `x`’s previous node and `z` referencing `x`’s next node:
+
+```python
+# Delete node x from the list.
+def delete(self, x):
+    # Splice out node x by making its next and previous
+    # reference each other.
+    y = x.prev
+    z = x.next
+    y.next = z
+    z.prev = y
+```
+
+## Searching a list
+
+The `find` method searches the linked list for a node with a given data value, returning a reference to the first node that has the value, or `None` if no nodes have the value. It uses linear search, but in a linked list.
+
+There’s a cute trick that I’ve incorporated into my implementation of `find`. If you go back to the linear search code that we saw before, you’ll notice that each loop iteration makes two tests: one to check that we haven’t reached the end of the list and one to see whether the list item matches what we’re searching for:
+
+```python
+def linear_search(the_list, key):
+    index = 0
+    while index < len(the_list):
+        if key == the_list[index]:
+            return index
+        else:
+            index += 1
+    return None
+```
+
+Suppose that you knew you’d find the item in the list. Then you wouldn’t have to check for reaching the end of the list, right? So let’s put the value we’re looking for into the linked list, but in a special place that tells us if that’s where we find it, then the only reason we found it was because we looked everywhere else before finding it in that special place.
+
+Gosh, if only we had an extra node in the list that didn’t contain any data and was at the end of the list. We do: the sentinel. So we put the value we’re looking for in the sentinel’s `data` instance variable, start at the first node after the sentinel, and loop until we see a match. If the match was not in the sentinel, then we found the value in the list. If the match was in the sentinel, the the value wasn’t really in the list; we found it only because we got all the way back to the sentinel. In either case, we put `None` back into the sentinel’s `data` instance variable because, well, my mother told me to.
+
+## Appending to the list
+
+The only other method in my `Sentinel_DLL` class is `append`. Not surprisingly, it finds the last node in the list and then calls `insert_after` for that node. How to find the last node in the list? It’s just the sentinel’s previous node.
+
+## Running times of the linked-list operations
+
+What are the worst-case running times of the operations for a circular, doubly linked list with a sentinel? Let’s assume that the list has n items (n + 1 nodes, including the sentinel, but of course the  + 1 won’t matter when we use asymptotic notation).
+
+The `__init__`, `first_node`, `insert_after`, `append`, and `delete` methods each take Θ(1) time, since they each look at only a constant number of nodes.
+
+The `__str__` method takes Θ(n) time, since it has to visit every node once.
+
+The time taken by the `find` method depends on how far down the linked list it has to go. In the worst case, the value is not present, and `find` has to examine every node once, for a worst-case running time of Θ(n).
+
+## Testing the linked list operations
+
+You can test the linked list operations by writing your own driver. I have a pretty minimal driver here:
+
+```python
+# test_sentinel_DLL.py
+# CS 1 class example by THC.
+# Tests the Sentinel_DLL class.
+
+from sentinel_DLL import Sentinel_DLL
+
+def test_sentinel_DLL():
+    # Make a linked list with Maine, Idaho, and Utah.
+    l = Sentinel_DLL()
+    l.append("Maine")
+    l.append("Idaho")
+    l.append("Utah")
+
+    # Add Ohio after Idaho.
+    node = l.find("Idaho")
+    if node != None:
+        print(node.get_data())
+        l.insert_after(node, "Ohio")
+    print(l)
+
+    # Delete Idaho.
+    if node != None:
+        l.delete(node)
+    print(l)
+
+    # Empty out the list, one node at a time.
+    while l.first_node() != None:
+        l.delete(l.first_node())
+
+    print(l)
+
+test_sentinel_DLL()
+```
+
+Output:
+
+```
+Idaho
+['Maine', 'Idaho', 'Ohio', 'Utah']
+['Maine', 'Ohio', 'Utah']
+[]
+```
