@@ -152,3 +152,130 @@ another_node.next = a_third_node
 
 print("Found:  " + str(head.find("Utah").data))
 ```
+
+## Circular, doubly linked list with a sentinel
+
+We did some things manually in the above example. It would be nice to have a class for a linked list that stored the address of the first node, and that also provided methods for inserting into, deleting from, appending to, and finding items in the list.
+
+Our previous model for a linked list, in which only the address of the next node is stored in any node, has some annoying special cases. We will therefore start with a slightly different implementation that has a few convenient features that at first blush might seem more complicated, but actually simplifies the implementation of certain methods, and even improves the running time of certain methods.
+
+1. The list will be **doubly linked**: each node will contain a reference to the _previous_ node in the chain (in a `prev` instance variable) as well as a reference to the next node. This structure not only makes it easy to iterate backward through the list, but it makes other, more common, operations easy, too.
+
+2. The list will have a sentinel node, instead of a reference to a first node. This sentinel node is a special node that acts as the 0th node in the linked list. No data is stored in this special node; it’s there just as a placeholder in the list.
+
+3. The list will be circular. The last node containing data will hold in its `next` instance variable the address of the sentinel node, and the sentinel node’s `prev` instance variable will hold the address of the last node.
+
+We call this structure a **circular, doubly linked list with a sentinel**. Quite a mouthful, indeed. Practice saying it fast.
+
+A circular, doubly linked list with a sentinel has the property that every node references a next node and a previous node. Always. This uniform way of treating nodes turns out to be quite convenient, because as we write methods to insert or delete nodes into the list, we don’t have to worry about special cases that would arise if the last node didn’t have a next node, and the first node didn’t have a previous node, but all interior nodes had both.
+
+Here is a picture of a circular, doubly linked list with a sentinel representing the same list as before:
+
+![alt text](http://projectpython.net/chapter17/xstates-DLL.png.pagespeed.ic.STByuOn0dn.png)
+
+We create a class, `Sentinel_DLL`, to implement a circular, doubly linked list with sentinel
+
+```python
+# sentinel_DLL.py
+# CS 1 class example for a circular, doubly linked list with a sentinel.
+# by db, thc
+
+# Class for a node in a circular, doubly linked list with a sentinel.
+class Node:
+    def __init__(self, data):
+        self.data = data  # instance variable to store the data
+        self.next = None  # instance variable with address of next node
+        self.prev = None  # instance variable with address of previous node
+
+    # Return the data in the Node.
+    def get_data(self):
+        return self.data
+
+# Class for a circular, doubly linked list with a sentinel.
+class Sentinel_DLL:
+    # Create the sentinel node, which is before the first node
+    # and after the last node.
+    def __init__(self):
+        self.sentinel = Node(None)
+        self.sentinel.next = self.sentinel
+        self.sentinel.prev = self.sentinel
+
+    # Return a reference to the first node in the list, if there is one.
+    # If the list is empty, return None.
+    def first_node(self):
+        if self.sentinel.next == self.sentinel:
+            return None
+        else:
+            return self.sentinel.next
+
+    # Insert a new node with data after node x.
+    def insert_after(self, x, data):
+        y = Node(data)   # make a new Node object.
+
+        # Fix up the links in the new node.
+        y.prev = x
+        y.next = x.next
+
+        # The new node follows x.
+        x.next = y
+
+        # And it's the previous node of its next node.
+        y.next.prev = y
+
+    # Insert a new node at the end of the list.
+    def append(self, data):
+        last_node = self.sentinel.prev
+        self.insert_after(last_node, data)
+
+    # Insert a new node at the start of the list.
+    def prepend(self, data):
+        self.insert_after(self.sentinel, data)
+
+    # Delete node x from the list.
+    def delete(self, x):
+        # Splice out node x by making its next and previous
+        # reference each other.
+        x.prev.next = x.next
+        x.next.prev = x.prev
+
+    # Find a node containing data, and return a reference to it.
+    # If no node contains data, return None.
+    def find(self, data):
+        # Trick: Store a copy of the data in the sentinel,
+        # so that the data is always found.
+        self.sentinel.data = data
+
+        x = self.first_node()
+        while x.data != data:
+            x = x.next
+
+        # Restore the sentinel's data.
+        self.sentinel.data = None
+
+        # Why did we drop out of the while-loop?
+        # If we found the data in the sentinel, then it wasn't
+        # anywhere else in the list.
+        if x == self.sentinel:
+            return None     # data wasn't really in the list
+        else:
+            return x        # we found it in x, in the list
+
+    #  Return the string representation of a circular, doubly linked
+    #  list with a sentinel, just as if it were a Python list.
+    def __str__(self):
+        s = "["
+
+        x = self.sentinel.next
+        while x != self.sentinel:  # look at each node in the list
+            if type(x.data) == str:
+                s += "'"
+            s += str(x.data)        # concatenate this node's data
+            if type(x.data) == str:
+                s += "'"
+            if x.next != self.sentinel:
+                s += ", "   # if not the last node, add the comma and space
+            x = x.next
+
+        s += "]"
+        return s
+```
