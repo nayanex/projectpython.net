@@ -44,7 +44,7 @@ print(pig_latin("programming in python is fun")) # Should be "rogrammingpay niay
 
 ## Exercise 3 
 
-The permissions of a file in a Linux system are split into three sets of three permissions: read, write, and execute for the owner, group, and others. Each of the three values can be expressed as an octal number summing each permission, with 4 corresponding to read, 2 to write, and 1 to execute. Or it can be written with a string using the letters r, w, and x or - when the permission is not granted. For example: 640 is read/write for the owner, read for the group, and no permissions for the others; converted to a string, it would be: "rw-r-----" 755 is read/write/execute for the owner, and read/execute for group and others; converted to a string, it would be: "rwxr-xr-x" Fill in the blanks to make the code convert a permission in octal format into a string format.
+The permissions of a file in a Linux system are split into three sets of three permissions: `read`, `write`, and `execute` for the `owner`, `group`, and `others`. Each of the three values can be expressed as an `octal` number summing each permission, with `4 corresponding to read, 2 to write, and 1 to execute`. Or it can be written with a string using the letters `r`, `w`, and `x` or `-` when the permission is not granted. For example: `640` is `read/write` for the `owner`, `read` for the `group`, and `no permissions` for the `others`; converted to a string, it would be: "rw-r-----" `755` is `read/write/execute` for the `owner`, and `read/execute` for `group` and `others`; converted to a string, it would be: "rwxr-xr-x". Write code to convert a permission in octal format into a string format.
 
 ```python
 def octal_to_string(octal):
@@ -67,6 +67,39 @@ print(octal_to_string(750)) # Should be rwxr-x---
 print(octal_to_string(600)) # Should be rw-------
 ```
 
+## Exercise 4
+
+The group_list function accepts a group name and a list of members, and returns a string with the format: group_name: member1, member2, … For example, group_list("g", ["a","b","c"]) returns "g: a, b, c". Write code to do that.
+
+```python
+def group_list(group, users):
+  members = ", ".join(users)
+  return group + ": " + members
+
+print(group_list("Marketing", ["Mike", "Karen", "Jake", "Tasha"])) # Should be "Marketing: Mike, Karen, Jake, Tasha"
+print(group_list("Engineering", ["Kim", "Jay", "Tom"])) # Should be "Engineering: Kim, Jay, Tom"
+print(group_list("Users", "")) # Should be "Users:"
+```
+
+## Exercise 5
+
+The guest_list function reads in a list of tuples with the name, age, and profession of each party guest, and prints the sentence "Guest is X years old and works as __." for each one. For example, guest_list(('Ken', 30, "Chef"), ("Pat", 35, 'Lawyer'), ('Amanda', 25, "Engineer")) should print out: Ken is 30 years old and works as Chef. Pat is 35 years old and works as Lawyer. Amanda is 25 years old and works as Engineer. 
+
+```python
+def guest_list(guests):
+	for name, age, profession in guests:
+		print("{} is {} years old and works as {}".format(name, age, profession))
+
+guest_list([('Ken', 30, "Chef"), ("Pat", 35, 'Lawyer'), ('Amanda', 25, "Engineer")])
+
+#Click Run to submit code
+"""
+Output should match:
+Ken is 30 years old and works as Chef
+Pat is 35 years old and works as Lawyer
+Amanda is 25 years old and works as Engineer
+"""
+```
 
 ## Oficial Python Documentation for Lists and Tuples
 
