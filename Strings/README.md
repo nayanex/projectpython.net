@@ -114,6 +114,33 @@ print("Base price: ${:.2f}. With tax: ${:.2f}".format(price, with_tax))
 ```
 In this case between the curly brackets we're writing a **formatting expression**. There are a bunch of different expressions we can write. These expressions are needed when we want to tell Python to format our values in a way that's different from the default. The expression starts with a `colon` to separate it from the field name that we saw before. After the colon, we write `.2f`. This means we're going to format a float number and that there should be two digits after the decimal dot. So no matter what the price is, our function always prints two decimals. 
 
+
+## Exercise: Formatting Address
+
+The format_address function separates out parts of the address string into new strings: house_number and street_name, and returns: "house number X on street named Y". The format of the input string is: numeric house number, followed by the street name which may contain numbers, but never by themselves, and could be several words long. For example, "123 Main Street", "1001 1st Ave", or "55 North Center Drive". Fill in the gaps to complete this function.
+
+```python
+def format_address(address_string):
+  # Declare variables
+  house_number = ""
+  street_name = ""
+
+  # Separate the address string into parts
+  house_number, street_name = address_string.split(None, 1)
+  
+  # Return the formatted string  
+  return "house number {} on street named {}".format(house_number, street_name)
+
+print(format_address("123 Main Street"))
+# Should print: "house number 123 on street named Main Street"
+
+print(format_address("1001 1st Ave"))
+# Should print: "house number 1001 on street named 1st Ave"
+
+print(format_address("55 North Center Drive"))
+# Should print "house number 55 on street named North Center Drive"
+```
+
 ## Oficial Python Documentation for Strings
 
 https://docs.python.org/3/library/stdtypes.html#string-methods
