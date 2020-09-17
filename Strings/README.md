@@ -141,6 +141,25 @@ print(format_address("55 North Center Drive"))
 # Should print "house number 55 on street named North Center Drive"
 ```
 
+## Exercise: Highlight Word
+
+The highlight_word function changes the given word in a sentence to its upper-case version. For example, highlight_word("Have a nice day", "nice") returns "Have a NICE day". Can you write this function in just one line?
+
+```python
+def highlight_word(sentence, word):
+	return(sentence.replace(word, word.upper()))
+
+print(highlight_word("Have a nice day", "nice"))
+print(highlight_word("Shhh, don't be so loud!", "loud"))
+print(highlight_word("Automating with Python is fun", "fun"))
+
+'''
+Have a NICE day
+Shhh, don't be so LOUD!
+Automating with Python is FUN
+'''
+```
+
 ## Oficial Python Documentation for Strings
 
 https://docs.python.org/3/library/stdtypes.html#string-methods

@@ -100,6 +100,35 @@ Amanda is 25 years old and works as Engineer
 """
 ```
 
+## Exercise 6: Joining Lists
+
+A professor with two assistants, Jamie and Drew, wants an attendance list of the students, in the order that they arrived in the classroom. Drew was the first one to note which students arrived, and then Jamie took over. After the class, they each entered their lists into the computer and emailed them to the professor, who needs to combine them into one, in the order of each student's arrival. Jamie emailed a follow-up, saying that her list is in reverse order. Complete the steps to combine them into one list as follows: **the contents of Drew's list, followed by Jamie's list in reverse order**, to get an accurate list of the students as they arrived.
+
+```python
+def combine_lists(list1, list2):
+  return list2 + list1[::-1]
+  
+Jamies_list = ["Alice", "Cindy", "Bobby", "Jan", "Peter"]
+Drews_list = ["Mike", "Carol", "Greg", "Marcia"]
+
+print(combine_lists(Jamies_list, Drews_list))
+
+# ['Mike', 'Carol', 'Greg', 'Marcia', 'Peter', 'Jan', 'Bobby', 'Cindy', 'Alice']
+```
+
+## Exercise 7: List Comprehension
+
+Use a list comprehension to create a list of squared numbers (n*n). The function receives the variables start and end, and returns a list of squares of consecutive numbers between *start* and *end* **inclusively**. For example, squares(2, 3) should return [4, 9].tents of Drew's list, followed by Jamie's list in reverse order**, to get an accurate list of the students as they arrived.
+
+```python
+def squares(start, end):
+	return [x**2 for x in range(start, end + 1)]
+
+print(squares(2, 3)) # Should be [4, 9]
+print(squares(1, 5)) # Should be [1, 4, 9, 16, 25]
+print(squares(0, 10)) # Should be [0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+```
+
 ## Oficial Python Documentation for Lists and Tuples
 ```
 https://docs.python.org/3/library/stdtypes.html#sequence-types-list-tuple-range

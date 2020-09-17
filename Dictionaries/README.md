@@ -130,6 +130,54 @@ groceries = {"bananas": 1.56, "apples": 2.50, "oranges": 0.99, "bread": 4.59,
 print(add_prices(groceries)) # Should print 28.44
 ```
 
+## Exercise 7 
+
+Taylor and Rory are hosting a party. They sent out invitations, and each one collected responses into dictionaries, with names of their friends and how many guests each friend is bringing. Each dictionary is a partial list, but Rory's list has more current information about the number of guests. Fill in the blanks to combine both dictionaries into one, with each friend listed only once, and the number of guests from Rory's dictionary taking precedence, if a name is included in both dictionaries. Then print the resulting dictionary.
+
+```python
+def combine_guests(guests1, guests2):
+  # Combine both dictionaries into one, with each key listed 
+  # only once, and the value from guests1 taking precedence
+  guests = guests2.copy()
+  guests.update(guests1)
+  return guests
+  # Another way to do it
+  # {**guests2, **guests1} 
+
+  # {'David': 1, 'Nancy': 1, 'Robert': 4, 'Adam': 2, 'Samantha': 3, 'Chris': 5, 'Brenda': 3, 'Jose': 3, 'Charlotte': 2, 'Terry': 1}
+
+Rorys_guests = { "Adam":2, "Brenda":3, "David":1, "Jose":3, "Charlotte":2, "Terry":1, "Robert":4}
+Taylors_guests = { "David":4, "Nancy":1, "Robert":2, "Adam":1, "Samantha":3, "Chris":5}
+
+print(combine_guests(Rorys_guests, Taylors_guests))
+```
+
+## Exercise 7 
+
+Use a dictionary to count the frequency of letters in the input string. Only letters should be counted, not blank spaces, numbers, or punctuation. Upper case should be considered the same as lower case. For example, count_letters("This is a sentence.") should return {'t': 2, 'h': 1, 'i': 2, 's': 3, 'a': 1, 'e': 3, 'n': 2, 'c': 1}.
+
+```python
+def count_letters(text):
+  result = {}
+  # Go through each letter in the text
+  for letter in text:
+    # Check if the letter needs to be counted or not
+    if letter.isalpha():
+    # Add or increment the value in the dictionary
+      if letter not in result:
+        result[letter.lower()] = 0
+      result[letter.lower()] += 1
+  return result
+
+print(count_letters("AaBbCc"))
+# Should be {'a': 2, 'b': 2, 'c': 2}
+
+print(count_letters("Math is fun! 2+2=4"))
+# Should be {'m': 1, 'a': 1, 't': 1, 'h': 1, 'i': 1, 's': 1, 'f': 1, 'u': 1, 'n': 1}
+
+print(count_letters("This is a sentence."))
+# Should be {'t': 2, 'h': 1, 'i': 2, 's': 3, 'a': 1, 'e': 3, 'n': 2, 'c': 1}
+```
 
 ## Oficial Python Documentation for Dictionaries
 
